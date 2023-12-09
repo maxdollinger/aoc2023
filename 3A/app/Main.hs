@@ -6,13 +6,13 @@ main = do
   let nIdxs = addLineNumber (map getNumberIdxs (lines content)) 0
   let symbols = addLineNumber (map getSymbols (lines content)) 0
   let takeNumbers = map (`isNearSymbol` symbols) nIdxs
-  print (sumNumbers (getNumbers (lines content)) takeNumbers)
+  print (sumNumbers (getNumbers content) takeNumbers)
 
 sumNumbers :: [Int] -> [Bool] -> Int
 sumNumbers ns bs = sum $ map snd (filter fst (zip bs ns))
 
-getNumbers :: [String] -> [Int]
-getNumbers = concatMap (\str -> map (\s -> read s :: Int) (getAllTextMatches (str =~ "[0-9]+") :: [String]))
+getNumbers :: String -> [Int]
+getNumbers str = map (\s -> read s :: Int) (getAllTextMatches (str =~ "[0-9]+") :: [String])
 
 addLineNumber :: [[(Int, Int)]] -> Int -> [(Int, Int, Int)]
 addLineNumber [] _ = []
