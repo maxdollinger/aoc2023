@@ -11,11 +11,11 @@ getNumberOfWonCards :: [(Int, [Int])] -> Int
 getNumberOfWonCards cards = length (concatMap (replaceWins cards) cards)
 
 replaceWins :: [(Int, [Int])] -> (Int, [Int]) -> [(Int, [Int])]
-replaceWins cards (_, ws) =
-  let wins = map (findCardByNumber cards) ws
-   in if null wins
-        then wins
-        else wins ++ concatMap (replaceWins cards) wins
+replaceWins cards (_, ws)
+  | null winns = winns
+  | otherwise = winns ++ concatMap (replaceWins cards) winns
+  where
+    winns = map (findCardByNumber cards) ws
 
 findCardByNumber :: [(Int, [Int])] -> Int -> (Int, [Int])
 findCardByNumber [] _ = (0, [])
