@@ -1,0 +1,27 @@
+cabal-version:      3.4
+name:               6B
+version:            0.1.0.0
+-- synopsis:
+-- description:
+license:            MIT
+license-file:       LICENSE
+author:             murky_depth
+maintainer:         max@dollinger.dev
+-- copyright:
+build-type:         Simple
+extra-doc-files:    CHANGELOG.md
+-- extra-source-files:
+
+common warnings
+    ghc-options: -Wall
+
+executable 6B
+    import:           warnings
+    main-is:          Main.hs
+    -- other-modules:
+    -- other-extensions:
+    build-depends:
+        base ^>=4.17.2.0,
+        regex-tdfa ^>= 1.3.2,
+    hs-source-dirs:   app
+    default-language: Haskell2010
