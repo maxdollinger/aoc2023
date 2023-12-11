@@ -1,4 +1,3 @@
-import Data.Char (isDigit)
 import Data.List (find)
 import Data.List.Split (splitOn)
 import Data.Maybe (fromJust, isJust, mapMaybe)
@@ -8,25 +7,22 @@ main :: IO ()
 main = do
   input <- getContents
   let (seeds, mappings) = parseInput input
-  let locs = map (findLocation mappings) seeds
-  print (minimum locs)
+  print (minimum (map (findLocation mappings) seeds))
 
-type Range = (Int, Int)
-
-type Mapping = (Range, Int)
+type Mapping = (Int, Int, Int)
 
 findLocation :: [[Mapping]] -> Int -> Int
 findLocation ms loc = foldl (flip mapNumber) loc ms
 
 isInRange :: Int -> Mapping -> Bool
-isInRange n ((s, e), _) = s <= n && e >= n
+isInRange n (s, e, _) = s <= n && e >= n
 
-calcMappedNumber :: Mapping -> Int -> Int
-calcMappedNumber (_, offset) n = n + offset
+calcDst :: Mapping -> Int -> Int
+calcDst (s, _, ds) n = ds + (n - s)
 
 mapNumber :: [Mapping] -> Int -> Int
 mapNumber m n
-  | isJust mapping = calcMappedNumber (fromJust mapping) n
+  | isJust mapping = calcDst (fromJust mapping) n
   | otherwise = n
   where
     mapping = find (isInRange n) m
@@ -37,15 +33,11 @@ parseInput str =
    in (parseInts (head splits), parseMaps (tail splits))
 
 parseMaps :: [String] -> [[Mapping]]
-parseMaps = map (mapMaybe (createMapping . parseInts) . filter isMappingLine . lines)
+parseMaps = map (mapMaybe (createMapping . parseInts) . lines)
 
 createMapping :: [Int] -> Maybe Mapping
-createMapping [d, s, r] = Just ((s, s + r), d - s)
+createMapping [d, s, r] = Just (s, s + r - 1, d)
 createMapping _ = Nothing
 
-isMappingLine :: String -> Bool
-isMappingLine [] = False
-isMappingLine (x : _) = isDigit x
-
 parseInts :: String -> [Int]
-parseInts str = map (\s -> read s :: Int) (getAllTextMatches (str =~ "[0-9]+") :: [String])
+parseInts str = map read (getAllTextMatches (str =~ "[0-9]+") :: [String])
